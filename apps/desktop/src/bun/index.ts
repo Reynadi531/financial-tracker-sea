@@ -25,8 +25,8 @@ new BrowserWindow({
   title: "financial-tracker-sea",
   url,
   frame: {
-    width: 1280,
-    height: 820,
+    width: 1920,
+    height: 720,
     x: 120,
     y: 120,
   },
