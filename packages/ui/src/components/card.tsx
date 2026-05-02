@@ -1,5 +1,6 @@
-import { cn } from "@financial-tracker-sea/ui/lib/utils";
 import * as React from "react";
+
+import { cn } from "@financial-tracker-sea/ui/lib/utils";
 
 function Card({
   className,
