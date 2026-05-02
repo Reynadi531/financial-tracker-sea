@@ -36,7 +36,7 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
     <div className="bg-white border-2 border-[#F1F1F1] rounded-[18px] p-6">
       <div className="flex items-center gap-2 mb-5">
         <LogOut className="w-5 h-5 text-[rgba(0,0,0,0.75)]" />
-        <h2 className="text-[18px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+        <h2 className="text-[20px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
           Form Pengeluaran
         </h2>
       </div>
@@ -45,7 +45,7 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Jumlah */}
           <div className="space-y-1.5">
-            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+            <Label className="!text-[18px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
               Jumlah (Rp)
             </Label>
             <Input
@@ -54,13 +54,13 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
               value={jumlahRp}
               onChange={(e) => setJumlahRp(e.target.value)}
               required
-              className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)]"
+              className="!h-[41px] !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !placeholder:text-[rgba(0,0,0,0.5)]"
             />
           </div>
 
           {/* Tanggal */}
           <div className="space-y-1.5">
-            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+            <Label className="!text-[18px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
               Tanggal
             </Label>
             <div className="relative">
@@ -69,7 +69,7 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
                 required
-                className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)] pr-10"
+                className="!h-[41px] !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !placeholder:text-[rgba(0,0,0,0.5)] pr-10"
               />
               <CalendarDays className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[rgba(0,0,0,0.5)] pointer-events-none" />
             </div>
@@ -77,34 +77,32 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
 
           {/* Kategori */}
           <div className="space-y-1.5">
-            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+            <Label className="!text-[18px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
               Kategori
             </Label>
-            <div className="relative">
-              <Select value={kategori} onValueChange={(val) => setKategori(val || "")} required>
-                <SelectTrigger className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em]">
-                  <SelectValue placeholder="makanan" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Makanan">Makanan</SelectItem>
-                  <SelectItem value="Transportasi">Transportasi</SelectItem>
-                  <SelectItem value="Kebutuhan Harian">Kebutuhan Harian</SelectItem>
-                  <SelectItem value="Lainnya">Lainnya</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <Select value={kategori} onValueChange={(val) => setKategori(val || "")} required>
+              <SelectTrigger className="!h-[41px] !w-full !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !py-0 !px-3">
+                <SelectValue placeholder="makanan" />
+              </SelectTrigger>
+              <SelectContent className="!rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px]">
+                <SelectItem value="Makanan" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Makanan</SelectItem>
+                <SelectItem value="Transportasi" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Transportasi</SelectItem>
+                <SelectItem value="Kebutuhan Harian" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Kebutuhan Harian</SelectItem>
+                <SelectItem value="Lainnya" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Lainnya</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Catatan */}
           <div className="space-y-1.5">
-            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+            <Label className="!text-[18px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
               Catatan
             </Label>
             <Input
               placeholder="makan siang, bensin, dll"
               value={catatan}
               onChange={(e) => setCatatan(e.target.value)}
-              className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)]"
+              className="!h-[41px] !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !placeholder:text-[rgba(0,0,0,0.5)]"
             />
           </div>
         </div>
@@ -113,7 +111,7 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
         <div className="flex justify-center pt-2">
           <button
             type="submit"
-            className="w-full max-w-[332px] h-[47px] bg-[#07334C] hover:bg-[#07334C]/90 text-white text-[17px] font-semibold tracking-[0.05em] rounded-[32px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] transition-colors"
+            className="w-full max-w-[332px] h-[47px] bg-[#07334C] hover:bg-[#07334C]/90 text-white text-[20px] font-semibold tracking-[0.9px] rounded-[32px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] transition-colors"
           >
             Simpan
           </button>

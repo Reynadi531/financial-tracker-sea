@@ -1,4 +1,4 @@
-import { History, ChevronDown, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
+import { History, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface Transaction {
   id: string;
@@ -87,9 +87,9 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
           </div>
           <span>perhalaman</span>
         </div>
-        <div className="flex items-center gap-1">
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-white text-[12px]">
-            ‹
+        <div className="flex items-center gap-2">
+          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center">
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
           <button className="w-[25px] h-[27px] bg-[#07334C] rounded-[6px] flex items-center justify-center text-white text-[12px] font-medium">
             1
@@ -104,8 +104,8 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
           <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-[rgba(0,0,0,0.75)] text-[12px]">
             5
           </button>
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-white text-[12px]">
-            ›
+          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center">
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
