@@ -1,10 +1,4 @@
 import { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@financial-tracker-sea/ui/components/card";
 import { Label } from "@financial-tracker-sea/ui/components/label";
 import { Input } from "@financial-tracker-sea/ui/components/input";
 import {
@@ -14,7 +8,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@financial-tracker-sea/ui/components/select";
-import { Button } from "@financial-tracker-sea/ui/components/button";
+import { CalendarDays, LogOut } from "lucide-react";
 
 export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }) {
   const [jumlahRp, setJumlahRp] = useState("");
@@ -31,7 +25,6 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
         kategori,
         catatan,
       });
-      // reset form
       setJumlahRp("");
       setTanggal("");
       setKategori("");
@@ -40,41 +33,57 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
   };
 
   return (
-    <Card className="h-full border-border shadow-sm flex flex-col">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold text-foreground">Form Pengeluaran</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-1">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 h-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="jumlahRp">Jumlah (Rp)</Label>
-              <Input
-                id="jumlahRp"
-                type="number"
-                placeholder="0"
-                value={jumlahRp}
-                onChange={(e) => setJumlahRp(e.target.value)}
-                required
-              />
-            </div>
+    <div className="bg-white border-2 border-[#F1F1F1] rounded-[18px] p-6">
+      <div className="flex items-center gap-2 mb-5">
+        <LogOut className="w-5 h-5 text-[rgba(0,0,0,0.75)]" />
+        <h2 className="text-[18px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+          Form Pengeluaran
+        </h2>
+      </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tanggal">Tanggal</Label>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Jumlah */}
+          <div className="space-y-1.5">
+            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+              Jumlah (Rp)
+            </Label>
+            <Input
+              type="number"
+              placeholder="0"
+              value={jumlahRp}
+              onChange={(e) => setJumlahRp(e.target.value)}
+              required
+              className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)]"
+            />
+          </div>
+
+          {/* Tanggal */}
+          <div className="space-y-1.5">
+            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+              Tanggal
+            </Label>
+            <div className="relative">
               <Input
-                id="tanggal"
                 type="date"
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
                 required
+                className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)] pr-10"
               />
+              <CalendarDays className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[rgba(0,0,0,0.5)] pointer-events-none" />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="kategori">Kategori</Label>
+          {/* Kategori */}
+          <div className="space-y-1.5">
+            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+              Kategori
+            </Label>
+            <div className="relative">
               <Select value={kategori} onValueChange={(val) => setKategori(val || "")} required>
-                <SelectTrigger id="kategori">
-                  <SelectValue placeholder="Pilih Kategori" />
+                <SelectTrigger className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em]">
+                  <SelectValue placeholder="makanan" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Makanan">Makanan</SelectItem>
@@ -84,28 +93,32 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="catatan">Catatan</Label>
-              <Input
-                id="catatan"
-                placeholder="Deskripsi pengeluaran..."
-                value={catatan}
-                onChange={(e) => setCatatan(e.target.value)}
-              />
-            </div>
           </div>
 
-          <div className="mt-auto pt-4 flex justify-end">
-            <Button
-              type="submit"
-              className="w-full md:w-auto px-8 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Simpan
-            </Button>
+          {/* Catatan */}
+          <div className="space-y-1.5">
+            <Label className="text-[15px] font-medium text-[rgba(0,0,0,0.75)] tracking-[0.045em]">
+              Catatan
+            </Label>
+            <Input
+              placeholder="makan siang, bensin, dll"
+              value={catatan}
+              onChange={(e) => setCatatan(e.target.value)}
+              className="h-[41px] rounded-[13px] border-[rgba(0,0,0,0.75)] bg-white text-[14px] text-[rgba(0,0,0,0.5)] tracking-[0.04em] placeholder:text-[rgba(0,0,0,0.5)]"
+            />
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-center pt-2">
+          <button
+            type="submit"
+            className="w-full max-w-[332px] h-[47px] bg-[#07334C] hover:bg-[#07334C]/90 text-white text-[17px] font-semibold tracking-[0.05em] rounded-[32px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] transition-colors"
+          >
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

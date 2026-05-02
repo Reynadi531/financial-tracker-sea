@@ -25,6 +25,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { CalendarDays, ArrowDown, HandCoins, CircleDollarSign } from "lucide-react";
 
 export const Route = createFileRoute("/visualisasiData")({
   component: VisualisasiData,
@@ -38,65 +39,97 @@ const barData = [
 
 const pieData = [
   { name: "Daily", value: 30, color: "#10B981" },
-  { name: "Fixed", value: 45, color: "#012B40" },
-  { name: "Others", value: 25, color: "#E2E8F0" },
+  { name: "Fixed", value: 45, color: "#07334C" },
+  { name: "Lainnya", value: 15, color: "#0070B2" },
+  { name: "Sisa Anggaran", value: 10, color: "#E2E8F0" },
 ];
 
 function VisualisasiData() {
   return (
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto pb-10">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[#012B40] dark:text-white">
+          <h1 className="text-[25px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.05em]">
             Visualisasi Data
           </h1>
-          <p className="text-muted-foreground mt-1">Pantau Data Pengeluaran Secara Real Time</p>
+          <p className="text-[16px] text-[rgba(0,0,0,0.75)] mt-1 tracking-[0.04em]">
+            Pantau pola pengeluaran dan anggaran anda
+          </p>
         </div>
-        <div className="w-full sm:w-48">
-          <Select defaultValue="bulanIni">
-            <SelectTrigger>
-              <SelectValue placeholder="Pilih Periode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="bulanIni">Bulan Ini</SelectItem>
-              <SelectItem value="bulanLalu">Bulan Lalu</SelectItem>
-              <SelectItem value="tahunIni">Tahun Ini</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Select defaultValue="Bulan Ini">
+          <SelectTrigger className="w-[178px] h-[52px] border-2 border-[#F1F1F1] rounded-[28px] gap-2 text-[18px] text-black tracking-[0.045em] font-medium hover:bg-gray-50">
+            <CalendarDays className="w-6 h-6 text-[rgba(0,0,0,0.75)]" />
+            <SelectValue placeholder="Pilih Periode" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Bulan Ini">Bulan Ini</SelectItem>
+            <SelectItem value="Bulan Lalu">Bulan Lalu</SelectItem>
+            <SelectItem value="Tahun Ini">Tahun Ini</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
+      {/* Top Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-border">
+        {/* Total Pengeluaran */}
+        <Card className="bg-white border-2 border-[rgba(213,213,213,0.33)] rounded-[18px] shadow-none">
           <CardContent className="p-6">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Total Pengeluaran</p>
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">Rp 10.500.000</h2>
-              <span className="text-sm font-medium text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded">
-                ↓ 12% Dari Bulan Lalu
+            <div className="flex items-center gap-2 mb-1">
+              <HandCoins className="w-6 h-6 text-[rgba(0,0,0,0.75)]" />
+              <p className="text-[16px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.04em]">Total Pengeluaran</p>
+            </div>
+            <h2 className="text-[35px] font-medium tracking-tight text-[rgba(0,0,0,0.75)]">
+              Rp 10.500.000
+            </h2>
+            <div className="flex items-center gap-1.5 mt-1">
+              <ArrowDown className="w-5 h-5 text-[#09A63C]" />
+              <span className="text-[16px] font-normal text-[#09A63C] tracking-[0.04em]">
+                12% dari bulan lalu
               </span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-border">
+        {/* Sisa Anggaran */}
+        <Card className="bg-white border-2 border-[rgba(213,213,213,0.33)] rounded-[18px] shadow-none">
           <CardContent className="p-6">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Sisa Anggaran</p>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">Rp 4.500.000</h2>
-              <span className="text-sm font-semibold text-primary">70%</span>
+            <div className="flex items-center gap-2 mb-1">
+              <CircleDollarSign className="w-6 h-6 text-[rgba(0,0,0,0.75)]" />
+              <p className="text-[16px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.04em]">Sisa Anggaran</p>
             </div>
-            <Progress value={70} className="h-2 w-full" />
+            <h2 className="text-[35px] font-medium tracking-tight text-[rgba(0,0,0,0.75)]">
+              Rp 4.500.000
+            </h2>
+            <p className="text-[18px] text-[#07334C] mt-1">dari Rp 15.000.000</p>
+            <Progress value={70} className="h-[13px] w-full mt-3 rounded-[18px]" />
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 border-border shadow-sm flex flex-col">
+      {/* Bottom Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6">
+        {/* Anggaran VS Aktual */}
+        <Card className="bg-white border-2 border-[rgba(213,213,213,0.33)] rounded-[18px] shadow-none flex flex-col">
           <CardHeader>
-            <CardTitle className="text-lg font-bold text-[#012B40] dark:text-white">
-              Anggaran VS Aktual
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-[25px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.05em]">
+                  Anggaran VS Aktual
+                </CardTitle>
+                <p className="text-[16px] text-[rgba(0,0,0,0.75)] mt-1 tracking-[0.04em]">Berdasarkan Kategori Utama</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block h-3.5 w-3.5 rounded-full bg-[rgba(7,51,76,0.5)]" />
+                  <span className="text-[10px] text-[rgba(0,0,0,0.75)] tracking-[0.05em]">anggaran</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-block h-3.5 w-3.5 rounded-full bg-[rgba(0,112,178,0.5)]" />
+                  <span className="text-[10px] text-[rgba(0,0,0,0.75)] tracking-[0.05em]">sisa</span>
+                </div>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="flex-1 min-h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -124,41 +157,54 @@ function VisualisasiData() {
                   contentStyle={{ borderRadius: "8px", border: "1px solid #E2E8F0" }}
                   formatter={(value: any) => [`Rp ${Number(value).toLocaleString("id-ID")}`, ""]}
                 />
-                <Bar dataKey="aktual" name="Aktual" fill="#012B40" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="anggaran" name="Anggaran" fill="#94A3B8" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="aktual" name="Aktual" fill="rgba(7,51,76,0.5)" radius={[4, 4, 0, 0]} barSize={27} />
+                <Bar dataKey="anggaran" name="Anggaran" fill="rgba(0,112,178,0.5)" radius={[4, 4, 0, 0]} barSize={27} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card className="border-border shadow-sm flex flex-col">
+        {/* Distribusi */}
+        <Card className="bg-white border-2 border-[rgba(213,213,213,0.33)] rounded-[18px] shadow-none flex flex-col">
           <CardHeader>
-            <CardTitle className="text-lg font-bold text-[#012B40] dark:text-white">
+            <CardTitle className="text-[25px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.05em]">
               Distribusi
             </CardTitle>
+            <p className="text-[16px] text-[rgba(0,0,0,0.75)] mt-1 tracking-[0.04em]">Presentase Pengeluaran</p>
           </CardHeader>
-          <CardContent className="flex-1 min-h-[300px] flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  innerRadius={80}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            {/* Center Text */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
-              <span className="text-sm font-medium text-muted-foreground">Total</span>
-              <span className="text-2xl font-bold text-[#012B40] dark:text-white">100%</span>
+          <CardContent className="flex-1 min-h-[300px] flex flex-col items-center justify-center gap-2">
+            <div className="relative w-full flex-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={3}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+              {/* Center Text */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-sm font-medium text-muted-foreground">Total</span>
+                <span className="text-2xl font-bold text-[#07334C]">100%</span>
+              </div>
+            </div>
+            {/* Legend - 2x2 grid matching Figma */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1 pb-2 px-2 w-full">
+              {pieData.map((entry) => (
+                <div key={entry.name} className="flex items-center gap-1.5">
+                  <span className="inline-block h-3.5 w-3.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+                  <span className="text-[10px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.05em]">{entry.name}</span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>

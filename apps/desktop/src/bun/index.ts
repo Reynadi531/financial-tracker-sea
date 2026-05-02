@@ -26,10 +26,11 @@ new BrowserWindow({
   url,
   frame: {
     width: 1920,
-    height: 720,
+    height: 1080,
     x: 120,
     y: 120,
   },
+  maximize: true,
 });
 
 console.log("Electrobun desktop shell started.");

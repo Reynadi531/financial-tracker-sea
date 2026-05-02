@@ -1,7 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { LayoutDashboard, PieChart, Target } from "lucide-react";
 import { Logo } from "./logo";
-import { ModeToggle } from "./mode-toggle";
 
 export default function Sidebar({ className = "" }: { className?: string }) {
   const location = useLocation();
@@ -18,7 +17,7 @@ export default function Sidebar({ className = "" }: { className?: string }) {
         <Logo />
       </div>
 
-      <nav className="flex-1 px-4 flex flex-col gap-2">
+      <nav className="flex-1 px-6 flex flex-col gap-2">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = location.pathname === link.to;
@@ -27,11 +26,11 @@ export default function Sidebar({ className = "" }: { className?: string }) {
             <Link
               key={link.to}
               to={link.to}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm
+              className={`flex items-center gap-3 px-4 py-3 rounded-[15px] transition-colors font-medium text-sm
                 ${
                   isActive
-                    ? "bg-[#012B40] text-white"
-                    : "text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-foreground/75 hover:bg-accent hover:text-foreground"
                 }
               `}
             >
@@ -42,15 +41,11 @@ export default function Sidebar({ className = "" }: { className?: string }) {
         })}
 
         <div className="mt-8 pt-4 border-t border-sidebar-border">
-          <button className="w-full flex items-center justify-center gap-2 bg-[#012B40] hover:bg-[#012B40]/90 text-white px-4 py-3 rounded-xl font-medium text-sm transition-colors shadow-sm">
-            <span>+</span> Tambah Pengeluaran
+          <button className="w-full flex items-center justify-center gap-2 bg-[#07334C] hover:bg-[#07334C]/90 text-white px-4 py-3 rounded-[32px] font-semibold text-sm transition-colors shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)]">
+            <span className="text-lg">+</span> Tambah Pengeluaran
           </button>
         </div>
       </nav>
-
-      <div className="p-4 border-t border-sidebar-border mt-auto">
-        <ModeToggle />
-      </div>
     </div>
   );
 }

@@ -12,17 +12,38 @@ function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([
     {
       id: "1",
-      amount: 15000,
-      categoryTag: "Makanan",
-      description: "Makan siang ayam geprek",
+      amount: 16000,
+      categoryTag: "Daily",
+      description: "makan pagi di warteg bahari",
       date: new Date().toISOString(),
     },
     {
       id: "2",
-      amount: 50000,
-      categoryTag: "Transportasi",
-      description: "Bensin motor",
+      amount: 15000,
+      categoryTag: "daily",
+      description: "makan siang di warteg bahari",
+      date: new Date().toISOString(),
+    },
+    {
+      id: "3",
+      amount: 175000,
+      categoryTag: "fixed",
+      description: "belanja bulanan di supermarket",
       date: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+      id: "4",
+      amount: 10000,
+      categoryTag: "lainnya",
+      description: "fotokopi tugas besar elektronika",
+      date: new Date(Date.now() - 2 * 86400000).toISOString(),
+    },
+    {
+      id: "5",
+      amount: 10000,
+      categoryTag: "lainnya",
+      description: "fotokopi tugas besar elektronika",
+      date: new Date(Date.now() - 2 * 86400000).toISOString(),
     },
   ]);
   const [totalBudget] = useState(15000000);
@@ -44,14 +65,9 @@ function Dashboard() {
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto">
       <SummaryCards totalBudget={totalBudget} totalExpense={totalExpense} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-rows-fr">
-        <div className="lg:col-span-1">
-          <FormPengeluaran onSubmit={handleAddTransaction} />
-        </div>
-        <div className="lg:col-span-2">
-          <RiwayatPengeluaran transactions={transactions} />
-        </div>
-      </div>
+      <FormPengeluaran onSubmit={handleAddTransaction} />
+
+      <RiwayatPengeluaran transactions={transactions} />
     </div>
   );
 }

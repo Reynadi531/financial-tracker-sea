@@ -1,20 +1,34 @@
 {
   "mcpServers": {
     "figma": {
-      "type": "remote",
-      "url": "http://127.0.0.1:3845/mcp"
+      "url": "http://127.0.0.1:3845/mcp",
+      "type": "http",
+      "directTools": true
     },
     "better-t-stack": {
       "command": "bunx",
-      "args": ["create-better-t-stack@latest", "mcp"]
+      "args": [
+        "create-better-t-stack@latest",
+        "mcp"
+      ],
+      "directTools": true
     },
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "directTools": true
     },
     "shadcn": {
       "command": "npx",
-      "args": ["-y", "shadcn@latest", "mcp"]
+      "args": [
+        "-y",
+        "shadcn@latest",
+        "mcp"
+      ],
+      "directTools": true
     }
   }
 }

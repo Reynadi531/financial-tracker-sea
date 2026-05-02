@@ -54,21 +54,22 @@ function DaftarImpian() {
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto pb-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[#012B40] dark:text-white">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#07334C]">
             Daftar Impian
           </h1>
-          <p className="text-muted-foreground mt-1">Daftar barang dan tujuan tabunganmu.</p>
+          <p className="text-[rgba(117,117,117,0.46)] mt-1 text-sm">Buat impian Mu Jadi Nyata</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Overview Card */}
-        <Card className="md:col-span-2 bg-[#012B40] text-white border-none shadow-md overflow-hidden">
+        <Card className="md:col-span-2 bg-[#07334C] text-white border-none shadow-md overflow-hidden rounded-[18px]">
           <CardContent className="p-6 flex items-center justify-between h-full">
             <div className="z-10">
-              <p className="text-sm font-medium text-blue-100/80 mb-2">Total Terkumpul / Target</p>
-              <h2 className="text-3xl font-bold tracking-tight mb-1">Rp 20.000.000</h2>
-              <p className="text-sm font-medium text-blue-200">dari Rp 35.000.000</p>
+              <p className="text-sm font-medium text-white/80 tracking-[0.05em] mb-2">WHISTLIST OVERVIEW</p>
+              <p className="text-[20px] font-semibold text-white/80 tracking-[0.05em] mb-1">Total Terkumpul / Target</p>
+              <h2 className="text-[35px] font-bold tracking-tight mb-1">Rp 20.000.000</h2>
+              <p className="text-sm font-medium text-white/60">dari Rp 35.000.000</p>
             </div>
 
             <div className="w-24 h-24 relative hidden sm:block">
@@ -139,7 +140,7 @@ function DaftarImpian() {
                     className="resize-none"
                   />
                 </div>
-                <Button className="w-full mt-2 bg-[#012B40] hover:bg-[#012B40]/90 text-white">
+                <Button className="w-full mt-2 bg-[#07334C] hover:bg-[#07334C]/90 text-white rounded-[32px]">
                   <Plus className="w-4 h-4 mr-2" /> Tambahkan Impian
                 </Button>
               </div>

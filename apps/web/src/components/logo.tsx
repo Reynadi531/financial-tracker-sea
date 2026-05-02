@@ -13,10 +13,9 @@ export function Logo({ className = "" }: { className?: string }) {
         <text
           x="0"
           y="34"
-          fill="#012B40"
-          className="dark:fill-white"
+          fill="#07334C"
           style={{
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "Roboto, sans-serif",
             fontWeight: 800,
             fontSize: "32px",
             letterSpacing: "-2px",
@@ -40,9 +39,8 @@ export function Logo({ className = "" }: { className?: string }) {
         <text
           x="72"
           y="20"
-          fill="#012B40"
-          className="dark:fill-white"
-          style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "15px" }}
+          fill="#07334C"
+          style={{ fontFamily: "Roboto, sans-serif", fontWeight: 600, fontSize: "15px" }}
         >
           Financial
         </text>
@@ -51,9 +49,8 @@ export function Logo({ className = "" }: { className?: string }) {
         <text
           x="72"
           y="40"
-          fill="#012B40"
-          className="dark:fill-white"
-          style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "15px" }}
+          fill="#07334C"
+          style={{ fontFamily: "Roboto, sans-serif", fontWeight: 700, fontSize: "15px" }}
         >
           Tracker <tspan fill="#10B981">SEA</tspan>
         </text>
