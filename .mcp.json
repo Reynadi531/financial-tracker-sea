@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "figma": {
+      "type": "remote",
+      "url": "http://127.0.0.1:3845/mcp"
+    },
     "better-t-stack": {
       "command": "bunx",
       "args": ["create-better-t-stack@latest", "mcp"]

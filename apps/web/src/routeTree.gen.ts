@@ -8,80 +8,80 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as VisualisasiDataRouteImport } from "./routes/visualisasiData";
-import { Route as DaftarImpianRouteImport } from "./routes/daftarImpian";
-import { Route as IndexRouteImport } from "./routes/index";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as VisualisasiDataRouteImport } from './routes/visualisasiData'
+import { Route as DaftarImpianRouteImport } from './routes/daftarImpian'
+import { Route as IndexRouteImport } from './routes/index'
 
 const VisualisasiDataRoute = VisualisasiDataRouteImport.update({
-  id: "/visualisasiData",
-  path: "/visualisasiData",
+  id: '/visualisasiData',
+  path: '/visualisasiData',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const DaftarImpianRoute = DaftarImpianRouteImport.update({
-  id: "/daftarImpian",
-  path: "/daftarImpian",
+  id: '/daftarImpian',
+  path: '/daftarImpian',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/daftarImpian": typeof DaftarImpianRoute;
-  "/visualisasiData": typeof VisualisasiDataRoute;
+  '/': typeof IndexRoute
+  '/daftarImpian': typeof DaftarImpianRoute
+  '/visualisasiData': typeof VisualisasiDataRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/daftarImpian": typeof DaftarImpianRoute;
-  "/visualisasiData": typeof VisualisasiDataRoute;
+  '/': typeof IndexRoute
+  '/daftarImpian': typeof DaftarImpianRoute
+  '/visualisasiData': typeof VisualisasiDataRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/daftarImpian": typeof DaftarImpianRoute;
-  "/visualisasiData": typeof VisualisasiDataRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/daftarImpian': typeof DaftarImpianRoute
+  '/visualisasiData': typeof VisualisasiDataRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/daftarImpian" | "/visualisasiData";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/daftarImpian" | "/visualisasiData";
-  id: "__root__" | "/" | "/daftarImpian" | "/visualisasiData";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/daftarImpian' | '/visualisasiData'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/daftarImpian' | '/visualisasiData'
+  id: '__root__' | '/' | '/daftarImpian' | '/visualisasiData'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  DaftarImpianRoute: typeof DaftarImpianRoute;
-  VisualisasiDataRoute: typeof VisualisasiDataRoute;
+  IndexRoute: typeof IndexRoute
+  DaftarImpianRoute: typeof DaftarImpianRoute
+  VisualisasiDataRoute: typeof VisualisasiDataRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/visualisasiData": {
-      id: "/visualisasiData";
-      path: "/visualisasiData";
-      fullPath: "/visualisasiData";
-      preLoaderRoute: typeof VisualisasiDataRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/daftarImpian": {
-      id: "/daftarImpian";
-      path: "/daftarImpian";
-      fullPath: "/daftarImpian";
-      preLoaderRoute: typeof DaftarImpianRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/visualisasiData': {
+      id: '/visualisasiData'
+      path: '/visualisasiData'
+      fullPath: '/visualisasiData'
+      preLoaderRoute: typeof VisualisasiDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daftarImpian': {
+      id: '/daftarImpian'
+      path: '/daftarImpian'
+      fullPath: '/daftarImpian'
+      preLoaderRoute: typeof DaftarImpianRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,7 +89,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DaftarImpianRoute: DaftarImpianRoute,
   VisualisasiDataRoute: VisualisasiDataRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
