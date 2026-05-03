@@ -14,7 +14,7 @@ import { Button } from "@financial-tracker-sea/ui/components/button";
 import { Input } from "@financial-tracker-sea/ui/components/input";
 import { Label } from "@financial-tracker-sea/ui/components/label";
 import { Textarea } from "@financial-tracker-sea/ui/components/textarea";
-import { Plus, ImagePlus } from "lucide-react";
+import { Plus, ImagePlus, ListChecks } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 export const Route = createFileRoute("/daftarImpian")({
@@ -24,192 +24,252 @@ export const Route = createFileRoute("/daftarImpian")({
 const mockWishlist = [
   {
     id: 1,
-    name: "Macbook Pro",
-    target: 20000000,
-    current: 5000000,
+    name: "Macbook Pro M5 Max",
+    target: 60000000,
+    current: 15000000,
     img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
     status: "Berjalan",
   },
   {
     id: 2,
-    name: "Liburan Jepang",
-    target: 15000000,
-    current: 15000000,
+    name: "Mac Mini M4",
+    target: 10000000,
+    current: 1000000,
     img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=400&q=80",
-    status: "Tercapai",
+    status: "Berjalan",
+  },
+  {
+    id: 3,
+    name: "Mitsubishi Pajero Sport Dakar",
+    target: 723000000,
+    current: 20000000,
+    img: "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&w=400&q=80",
+    status: "Berjalan",
   },
 ];
+
+const formatRupiah = (value: number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+};
 
 function DaftarImpian() {
   const [activeTab, setActiveTab] = useState("Semua");
 
   const totalTarget = 35000000;
-  const totalCollected = 20000000;
-  const overallProgress = Math.round((totalCollected / totalTarget) * 100);
+  const totalCollected = 12500000;
+  const overallProgress = 95;
 
   const filteredList =
     activeTab === "Semua" ? mockWishlist : mockWishlist.filter((item) => item.status === activeTab);
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto pb-10">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[#07334C]">
-            Daftar Impian
-          </h1>
-          <p className="text-[rgba(117,117,117,0.46)] mt-1 text-sm">Buat impian Mu Jadi Nyata</p>
+    <div className="flex flex-col gap-8 w-full mx-auto pb-10 bg-[#fbfbfb] min-h-screen">
+      {/* Header aligned like Figma */}
+      <div className="flex items-center gap-4 bg-white border-b border-[#d5d5d5] px-8 h-[90px] w-full">
+        <div className="bg-[rgba(213,213,213,0.33)] border border-[#d7d7d7] w-9 h-[38px] rounded-[5px] flex items-center justify-center mr-2">
+          <ListChecks className="text-gray-600 w-[24px] h-[24px]" />
         </div>
+        <h1 className="text-[25px] font-semibold text-[rgba(0,0,0,0.75)] tracking-wide">
+          Daftar Impian
+        </h1>
+        <div className="w-[1px] h-[44px] bg-[#d5d5d5] mx-4"></div>
+        <p className="text-[14.6px] text-[rgba(117,117,117,0.46)] mt-1">
+          Buat impian Mu Jadi Nyata
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Overview Card */}
-        <Card className="md:col-span-2 bg-[#07334C] text-white border-none shadow-md overflow-hidden rounded-[18px]">
-          <CardContent className="p-6 flex items-center justify-between h-full">
-            <div className="z-10">
-              <p className="text-sm font-medium text-white/80 tracking-[0.05em] mb-2">WHISTLIST OVERVIEW</p>
-              <p className="text-[20px] font-semibold text-white/80 tracking-[0.05em] mb-1">Total Terkumpul / Target</p>
-              <h2 className="text-[35px] font-bold tracking-tight mb-1">Rp 20.000.000</h2>
-              <p className="text-sm font-medium text-white/60">dari Rp 35.000.000</p>
-            </div>
+      <div className="px-8 max-w-[1200px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Overview Card */}
+          <Card className="lg:col-span-2 bg-[#001d4c] text-white border-none shadow-[0px_0px_10px_0px_rgba(0,29,76,0.3)] overflow-hidden rounded-[10px] h-[204px]">
+            <CardContent className="p-6 px-10 h-full flex items-center justify-between">
+              <div className="flex flex-col h-full justify-center">
+                <p className="text-[18px] font-medium text-[#7eaffe] uppercase mb-4 tracking-wider">
+                  WHISTLIST OVERVIEW
+                </p>
+                <h2 className="text-[32px] font-extrabold mb-4">{formatRupiah(totalCollected)}</h2>
+                <div className="text-[18px] font-medium text-[#7eaffe] leading-snug">
+                  <p>Total Terkumpul dari Target</p>
+                  <p>{formatRupiah(totalTarget)}</p>
+                </div>
+              </div>
 
-            <div className="w-24 h-24 relative hidden sm:block">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={[{ value: overallProgress }, { value: 100 - overallProgress }]}
-                    innerRadius={30}
-                    outerRadius={40}
-                    dataKey="value"
-                    stroke="none"
-                    startAngle={90}
-                    endAngle={-270}
+              <div className="bg-[rgba(0,69,179,0.2)] rounded-[10px] w-[209px] h-[174px] flex flex-col items-center justify-center text-center -mr-2">
+                <p className="text-[14px] font-bold text-white mb-2">TOTAL KESELURUHAN</p>
+                <div className="relative w-[99px] h-[99px] flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={[{ value: overallProgress }, { value: 100 - overallProgress }]}
+                        innerRadius={38}
+                        outerRadius={50}
+                        dataKey="value"
+                        stroke="none"
+                        startAngle={90}
+                        endAngle={-270}
+                      >
+                        <Cell fill="#10B981" />
+                        <Cell fill="#0070b2" />
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-[21.12px] font-extrabold">{overallProgress}%</span>
+                  </div>
+                </div>
+                <p className="text-[11.75px] font-medium text-[#6a90cd] mt-2">
+                  Tingkatkan TabunganMu!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Action Card */}
+          <Dialog>
+            <DialogTrigger
+              render={
+                <Card className="border-[0.5px] border-[rgba(213,197,213,0.33)] bg-white shadow-[0px_0px_10px_0px_rgba(0,0,0,0.1)] hover:bg-gray-50 cursor-pointer transition-colors group flex items-center justify-center h-[204px] rounded-[10px]">
+                  <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-[76px] h-[76px] rounded-full bg-[#0045b3] flex items-center justify-center mb-1">
+                      <ListChecks className="text-white w-8 h-8" />
+                    </div>
+                    <p className="font-medium text-black text-[13.88px]">Buat Impian Baru</p>
+                    <div className="text-[12px] text-[#757575] font-normal leading-tight">
+                      <p>Tetapkan target</p>
+                      <p>dan mulai menabung</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              }
+            />
+            <DialogContent className="sm:max-w-[480px] p-6 sm:p-8 !rounded-[24px]">
+              <DialogHeader className="mb-2">
+                <DialogTitle className="text-2xl font-bold text-[#001d4c]">
+                  Buat Impian Baru
+                </DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-6">
+                <div className="flex items-center justify-center w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-[16px] cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <ImagePlus className="w-10 h-10 mb-3 text-gray-400" />
+                      <p className="text-sm text-gray-500 font-medium">
+                        Upload gambar impian (Maks 5MB)
+                      </p>
+                    </div>
+                    <input type="file" className="hidden" accept="image/png, image/jpeg" />
+                  </label>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="nama" className="text-[#001d4c] font-semibold">
+                      Nama Impian
+                    </Label>
+                    <Input
+                      id="nama"
+                      placeholder="Contoh: Macbook Pro M5 Max"
+                      className="h-12 rounded-[12px] border-gray-200 focus-visible:ring-[#10B981]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="target" className="text-[#001d4c] font-semibold">
+                      Target Harga (Rp)
+                    </Label>
+                    <Input
+                      id="target"
+                      type="number"
+                      placeholder="60000000"
+                      className="h-12 rounded-[12px] border-gray-200 focus-visible:ring-[#10B981]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="catatan" className="text-[#001d4c] font-semibold">
+                      Catatan Tambahan (Opsional)
+                    </Label>
+                    <Textarea
+                      id="catatan"
+                      placeholder="Warna Space Black, RAM 16GB..."
+                      className="resize-none min-h-[100px] rounded-[12px] border-gray-200 focus-visible:ring-[#10B981]"
+                    />
+                  </div>
+                  <Button className="w-full h-12 mt-4 bg-[#001d4c] hover:bg-[#001d4c]/90 text-white rounded-[12px] font-bold text-[16px] shadow-md">
+                    <Plus className="w-5 h-5 mr-2 stroke-[3]" /> Tambahkan Impian
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        <div className="mt-10">
+          <Tabs defaultValue="Semua" onValueChange={setActiveTab} className="w-full">
+            <TabsList className="bg-transparent space-x-6 border-none w-full justify-start rounded-none p-0 h-auto mb-8">
+              {["Semua", "Berjalan", "Tercapai"].map((tab) => (
+                <TabsTrigger
+                  key={tab}
+                  value={tab}
+                  className="data-[state=active]:bg-[#001d4c] data-[state=active]:text-white data-[state=active]:border-[#001d4c] bg-white border border-[#001d4c] text-[#001d4c] rounded-[16px] px-8 py-1.5 text-[14px] font-semibold transition-colors"
+                >
+                  {tab}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredList.map((item) => {
+                const pctStr = ((item.current / item.target) * 100).toFixed(1).replace(".0", "");
+                const pct = Math.min(Number(pctStr), 100);
+                return (
+                  <Card
+                    key={item.id}
+                    className="overflow-hidden bg-white border-[#d5d5d5] border-[0.5px] shadow-none flex flex-col rounded-[15px] h-[297px]"
                   >
-                    <Cell fill="#10B981" />
-                    <Cell fill="#FFFFFF" fillOpacity={0.2} />
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold">{overallProgress}%</span>
-              </div>
+                    <div className="h-[168px] overflow-hidden relative">
+                      <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,255,255,0.05)] to-[rgba(0,0,0,0.5)] opacity-80" />
+                    </div>
+                    <CardContent className="p-5 flex-1 flex flex-col justify-between">
+                      <h3 className="font-semibold text-[14px] text-black line-clamp-1">
+                        {item.name}
+                      </h3>
+
+                      <div className="flex justify-between items-end mt-2">
+                        <div className="flex flex-col">
+                          <p className="text-[12px] text-[#757575] font-medium mb-1">Terkumpul</p>
+                          <p className="font-bold text-[#0070b2] text-[12px]">
+                            {formatRupiah(item.current)}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <p className="text-[12px] text-[#757575] font-medium mb-1">Target</p>
+                          <p className="font-bold text-black text-[12px]">
+                            {formatRupiah(item.target)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1 mt-4">
+                        <div className="[&_[data-slot=progress-indicator]]:bg-[#0070b2] [&_[data-slot=progress-track]]:bg-[#d9d9d9]">
+                          <Progress value={pct} className="h-[9px] rounded-[10px]" />
+                        </div>
+                        <p className="text-[10px] font-medium text-left text-[#757575] mt-1">
+                          {pctStr.replace(".", ",")}% tercapai
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Card */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Card className="border-2 border-dashed border-border hover:bg-secondary/50 cursor-pointer transition-colors group flex items-center justify-center h-full min-h-[120px]">
-              <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-2">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                  <Plus className="w-6 h-6" />
-                </div>
-                <p className="font-semibold text-foreground">Buat Impian Baru</p>
-              </CardContent>
-            </Card>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Buat Impian Baru</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-6 py-4">
-              <div className="flex items-center justify-center w-full">
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-xl cursor-pointer hover:bg-secondary/50">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <ImagePlus className="w-8 h-8 mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">Upload gambar (Maks 5MB)</p>
-                  </div>
-                  <input type="file" className="hidden" accept="image/png, image/jpeg" />
-                </label>
-              </div>
-
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nama">Nama Impian</Label>
-                  <Input id="nama" placeholder="Contoh: Beli Tiket Konser" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="target">Target Harga (Rp)</Label>
-                  <Input id="target" type="number" placeholder="0" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="catatan">Catatan Tambahan (Opsional)</Label>
-                  <Textarea
-                    id="catatan"
-                    placeholder="Detail spesifikasi..."
-                    className="resize-none"
-                  />
-                </div>
-                <Button className="w-full mt-2 bg-[#07334C] hover:bg-[#07334C]/90 text-white rounded-[32px]">
-                  <Plus className="w-4 h-4 mr-2" /> Tambahkan Impian
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <Tabs defaultValue="Semua" onValueChange={setActiveTab} className="mt-4">
-        <TabsList className="bg-transparent space-x-2 border-b border-border w-full justify-start rounded-none p-0 h-auto">
-          {["Semua", "Berjalan", "Tercapai"].map((tab) => (
-            <TabsTrigger
-              key={tab}
-              value={tab}
-              className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none px-4 py-2 font-medium"
-            >
-              {tab}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredList.map((item) => {
-            const pct = Math.min(Math.round((item.current / item.target) * 100), 100);
-            return (
-              <Card
-                key={item.id}
-                className="overflow-hidden border-border shadow-sm flex flex-col group"
-              >
-                <div className="h-40 overflow-hidden relative">
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                  />
-                  {item.status === "Tercapai" && (
-                    <div className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
-                      TERCAPAI
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-4 flex-1 flex flex-col">
-                  <h3 className="font-bold text-lg mb-1 line-clamp-1">{item.name}</h3>
-                  <div className="flex justify-between items-end mb-4 flex-1">
-                    <div>
-                      <p className="text-xs text-muted-foreground font-medium mb-1">Terkumpul</p>
-                      <p className="font-bold text-primary">
-                        Rp {(item.current / 1000000).toFixed(1)}M
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-muted-foreground font-medium mb-1">Target</p>
-                      <p className="font-semibold text-foreground">
-                        Rp {(item.target / 1000000).toFixed(1)}M
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-2 mt-auto">
-                    <Progress value={pct} className="h-2" />
-                    <p className="text-xs font-semibold text-right text-muted-foreground">
-                      {pct}% Tercapai
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          </Tabs>
         </div>
-      </Tabs>
+      </div>
     </div>
   );
 }
