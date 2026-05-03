@@ -48,11 +48,19 @@ app.get("/current", async (c) => {
 
   const totalExpense = result[0]?.total ?? 0;
 
+  // grossBudget = what the user originally set + tabungan contributions
+  // Since pengeluaran subtracts from budget.totalAmount, we reconstruct it:
+  // grossBudget = current totalAmount + totalExpense (adds back what was subtracted)
+  const grossBudget = budget.totalAmount + totalExpense;
+  const remaining = budget.totalAmount;
+  const spentPercentage = grossBudget > 0 ? Math.round((totalExpense / grossBudget) * 100) : 0;
+
   return c.json({
     ...budget,
     totalExpense,
-    remaining: budget.totalAmount - totalExpense,
-    spentPercentage: Math.round((totalExpense / budget.totalAmount) * 100),
+    remaining,
+    grossBudget,
+    spentPercentage,
   });
 });
 

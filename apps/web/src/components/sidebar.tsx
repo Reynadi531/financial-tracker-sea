@@ -50,7 +50,7 @@ export default function Sidebar({
         <div className={`mt-8 pt-4 border-t border-sidebar-border ${collapsed ? "flex justify-center" : ""}`}>
           <button className={`flex items-center justify-center gap-2 bg-[#07334C] hover:bg-[#07334C]/90 text-white px-4 py-3 rounded-[32px] font-semibold text-sm transition-colors shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] ${collapsed ? "w-12 h-12 rounded-full p-0" : "w-full"}`}>
             <span className="text-lg">+</span>
-            {!collapsed && <span>Tambah Pengeluaran</span>}
+          {!collapsed && (<Link to="/"> <span>Tambah Pengeluaran</span> </Link>)}
           </button>
         </div>
       </nav>

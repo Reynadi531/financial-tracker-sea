@@ -2,11 +2,16 @@ import { env } from "@financial-tracker-sea/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { runMigrations } from "@financial-tracker-sea/db";
 
 import categories from "./routes/categories";
 import transactions from "./routes/transactions";
 import wishlists from "./routes/wishlists";
 import budgets from "./routes/budgets";
+
+// Run migrations on startup
+await runMigrations();
+console.log("Migrations complete.");
 
 const app = new Hono();
 

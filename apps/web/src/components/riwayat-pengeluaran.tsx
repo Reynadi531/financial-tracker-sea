@@ -1,29 +1,42 @@
 import { History, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
-
-export interface Transaction {
-  id: string;
-  amount: number;
-  categoryTag: string;
-  description: string;
-  date: string;
-}
+import type { ApiTransaction } from "../lib/api";
 
 interface RiwayatPengeluaranProps {
-  transactions: Transaction[];
+  transactions: ApiTransaction[];
+  loading?: boolean;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
 }
 
-const categoryColors: Record<string, string> = {
-  Makanan: "text-[#0070B2]",
-  Transportasi: "text-[#003B99]",
-  "Kebutuhan Harian": "text-[#66A1FF]",
-  Lainnya: "text-[#001D4C]",
-  Daily: "text-[#0070B2]",
-  daily: "text-[#003B99]",
-  fixed: "text-[#66A1FF]",
-  lainnya: "text-[#001D4C]",
-};
+export function RiwayatPengeluaran({
+  transactions,
+  loading = false,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
+}: RiwayatPengeluaranProps) {
+  const getVisiblePages = () => {
+    if (!pagination) return [];
+    const { page, totalPages } = pagination;
+    const pages: (number | "...")[] = [];
+    const delta = 1;
+    const left = Math.max(2, page - delta);
+    const right = Math.min(totalPages - 1, page + delta);
 
-export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
+    pages.push(1);
+    if (left > 2) pages.push("...");
+    for (let i = left; i <= right; i++) pages.push(i);
+    if (right < totalPages - 1) pages.push("...");
+    if (totalPages > 1) pages.push(totalPages);
+    return pages;
+  };
+
   return (
     <div className="bg-white border-2 border-[#F1F1F1] rounded-[18px] p-6">
       <div className="flex items-center gap-2 mb-4">
@@ -33,7 +46,13 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
         </h2>
       </div>
 
-      {transactions.length === 0 ? (
+      {loading ? (
+        <div className="flex flex-col gap-2 py-8">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-10 bg-gray-100 rounded animate-pulse" />
+          ))}
+        </div>
+      ) : transactions.length === 0 ? (
         <p className="text-center py-8 text-[rgba(0,0,0,0.5)] text-sm">
           Belum ada pengeluaran.
         </p>
@@ -49,7 +68,7 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
 
           {/* Data Rows */}
           {transactions.map((tx) => {
-            const catColor = categoryColors[tx.categoryTag] || "text-[#001D4C]";
+            const colorHex = tx.category?.colorHex ?? "#001D4C";
             return (
               <div
                 key={tx.id}
@@ -58,8 +77,8 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
                 <span className="font-medium text-[rgba(194,28,28,0.75)]">
                   -Rp {tx.amount.toLocaleString("id-ID")}
                 </span>
-                <span className={`capitalize ${catColor}`}>
-                  {tx.categoryTag}
+                <span className="capitalize" style={{ color: colorHex }}>
+                  {tx.category?.displayName ?? tx.category?.name ?? "-"}
                 </span>
                 <span className="text-[rgba(0,0,0,0.75)] truncate">
                   &ldquo;{tx.description || "-"}&rdquo;
@@ -69,7 +88,7 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
                     day: "2-digit",
                     month: "2-digit",
                     year: "2-digit",
-                  }).replace(/\//g, "/")}
+                  })}
                 </span>
               </div>
             );
@@ -78,37 +97,56 @@ export function RiwayatPengeluaran({ transactions }: RiwayatPengeluaranProps) {
       )}
 
       {/* Pagination */}
-      <div className="flex items-center justify-between mt-4 pt-2">
-        <div className="flex items-center gap-2 text-[12px] text-[rgba(0,0,0,0.75)]">
-          <span>tampilkan</span>
-          <div className="border border-[rgba(0,0,0,0.3)] rounded-[6px] px-2 py-1 flex items-center gap-1">
-            5
-            <ChevronDown className="w-3 h-3" />
+      {pagination && pagination.totalPages > 0 && (
+        <div className="flex items-center justify-between mt-4 pt-2">
+          <div className="flex items-center gap-2 text-[12px] text-[rgba(0,0,0,0.75)]">
+            <span>tampilkan</span>
+            <select
+              value={pagination.limit}
+              onChange={(e) => onPageSizeChange?.(Number(e.target.value))}
+              className="border border-[rgba(0,0,0,0.3)] rounded-[6px] px-2 py-1 text-[12px]"
+            >
+              {[5, 10, 20].map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <span>perhalaman</span>
           </div>
-          <span>perhalaman</span>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => onPageChange?.(pagination.page - 1)}
+              disabled={pagination.page <= 1}
+              className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center disabled:opacity-40"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            {getVisiblePages().map((p, i) =>
+              p === "..." ? (
+                <span key={`dots-${i}`} className="text-[rgba(0,0,0,0.75)] text-[12px] px-1">...</span>
+              ) : (
+                <button
+                  key={p}
+                  onClick={() => onPageChange?.(p)}
+                  className={`w-[25px] h-[27px] rounded-[6px] flex items-center justify-center text-[12px] font-medium ${
+                    p === pagination.page
+                      ? "bg-[#07334C] text-white"
+                      : "border border-[rgba(0,0,0,0.3)] text-[rgba(0,0,0,0.75)]"
+                  }`}
+                >
+                  {p}
+                </button>
+              ),
+            )}
+            <button
+              onClick={() => onPageChange?.(pagination.page + 1)}
+              disabled={pagination.page >= pagination.totalPages}
+              className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center disabled:opacity-40"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center">
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
-          <button className="w-[25px] h-[27px] bg-[#07334C] rounded-[6px] flex items-center justify-center text-white text-[12px] font-medium">
-            1
-          </button>
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-[rgba(0,0,0,0.75)] text-[12px]">
-            2
-          </button>
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-[rgba(0,0,0,0.75)] text-[12px]">
-            3
-          </button>
-          <span className="text-[rgba(0,0,0,0.75)] text-[12px]">...</span>
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center text-[rgba(0,0,0,0.75)] text-[12px]">
-            5
-          </button>
-          <button className="w-[25px] h-[27px] border border-[rgba(0,0,0,0.3)] rounded-[6px] flex items-center justify-center">
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

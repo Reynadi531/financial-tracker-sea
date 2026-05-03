@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VisualisasiDataRouteImport } from './routes/visualisasiData'
 import { Route as DaftarImpianRouteImport } from './routes/daftarImpian'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DaftarImpianWishlistIdRouteImport } from './routes/daftarImpian.$wishlistId'
 
 const VisualisasiDataRoute = VisualisasiDataRouteImport.update({
   id: '/visualisasiData',
@@ -28,34 +29,51 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DaftarImpianWishlistIdRoute = DaftarImpianWishlistIdRouteImport.update({
+  id: '/$wishlistId',
+  path: '/$wishlistId',
+  getParentRoute: () => DaftarImpianRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/daftarImpian': typeof DaftarImpianRoute
+  '/daftarImpian': typeof DaftarImpianRouteWithChildren
   '/visualisasiData': typeof VisualisasiDataRoute
+  '/daftarImpian/$wishlistId': typeof DaftarImpianWishlistIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/daftarImpian': typeof DaftarImpianRoute
+  '/daftarImpian': typeof DaftarImpianRouteWithChildren
   '/visualisasiData': typeof VisualisasiDataRoute
+  '/daftarImpian/$wishlistId': typeof DaftarImpianWishlistIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/daftarImpian': typeof DaftarImpianRoute
+  '/daftarImpian': typeof DaftarImpianRouteWithChildren
   '/visualisasiData': typeof VisualisasiDataRoute
+  '/daftarImpian/$wishlistId': typeof DaftarImpianWishlistIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daftarImpian' | '/visualisasiData'
+  fullPaths:
+    | '/'
+    | '/daftarImpian'
+    | '/visualisasiData'
+    | '/daftarImpian/$wishlistId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daftarImpian' | '/visualisasiData'
-  id: '__root__' | '/' | '/daftarImpian' | '/visualisasiData'
+  to: '/' | '/daftarImpian' | '/visualisasiData' | '/daftarImpian/$wishlistId'
+  id:
+    | '__root__'
+    | '/'
+    | '/daftarImpian'
+    | '/visualisasiData'
+    | '/daftarImpian/$wishlistId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DaftarImpianRoute: typeof DaftarImpianRoute
+  DaftarImpianRoute: typeof DaftarImpianRouteWithChildren
   VisualisasiDataRoute: typeof VisualisasiDataRoute
 }
 
@@ -82,12 +100,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/daftarImpian/$wishlistId': {
+      id: '/daftarImpian/$wishlistId'
+      path: '/$wishlistId'
+      fullPath: '/daftarImpian/$wishlistId'
+      preLoaderRoute: typeof DaftarImpianWishlistIdRouteImport
+      parentRoute: typeof DaftarImpianRoute
+    }
   }
 }
 
+interface DaftarImpianRouteChildren {
+  DaftarImpianWishlistIdRoute: typeof DaftarImpianWishlistIdRoute
+}
+
+const DaftarImpianRouteChildren: DaftarImpianRouteChildren = {
+  DaftarImpianWishlistIdRoute: DaftarImpianWishlistIdRoute,
+}
+
+const DaftarImpianRouteWithChildren = DaftarImpianRoute._addFileChildren(
+  DaftarImpianRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DaftarImpianRoute: DaftarImpianRoute,
+  DaftarImpianRoute: DaftarImpianRouteWithChildren,
   VisualisasiDataRoute: VisualisasiDataRoute,
 }
 export const routeTree = rootRouteImport

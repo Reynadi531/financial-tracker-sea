@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@financial-tracker-sea/ui/components/label";
 import { Input } from "@financial-tracker-sea/ui/components/input";
 import {
@@ -9,26 +9,72 @@ import {
   SelectItem,
 } from "@financial-tracker-sea/ui/components/select";
 import { CalendarDays, LogOut } from "lucide-react";
+import { toast } from "sonner";
+import { fetchCategories, type ApiCategory } from "../lib/api";
 
-export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }) {
+export interface FormPengeluaranData {
+  jumlahRp: number;
+  tanggal: string;
+  kategoriId: string;
+  catatan: string;
+}
+
+export function FormPengeluaran({
+  onSubmit,
+}: {
+  onSubmit?: (data: FormPengeluaranData) => Promise<void>;
+}) {
   const [jumlahRp, setJumlahRp] = useState("");
   const [tanggal, setTanggal] = useState("");
-  const [kategori, setKategori] = useState("");
+  const [kategoriId, setKategoriId] = useState("");
   const [catatan, setCatatan] = useState("");
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchCategories()
+      .then(setCategories)
+      .catch(() => toast.error("Gagal memuat kategori"));
+  }, []);
+
+  const resetForm = () => {
+    setJumlahRp("");
+    setTanggal("");
+    setKategoriId("");
+    setCatatan("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit({
+    if (!onSubmit || submitting) return;
+
+    // Validate
+    if (!jumlahRp || Number(jumlahRp) <= 0) {
+      toast.error("Jumlah harus diisi dengan angka positif");
+      return;
+    }
+    if (!tanggal) {
+      toast.error("Tanggal harus diisi");
+      return;
+    }
+    if (!kategoriId) {
+      toast.error("Kategori harus dipilih");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await onSubmit({
         jumlahRp: Number(jumlahRp),
         tanggal,
-        kategori,
+        kategoriId,
         catatan,
       });
-      setJumlahRp("");
-      setTanggal("");
-      setKategori("");
-      setCatatan("");
+      resetForm();
+    } catch {
+      // Error already shown by parent (handleAddTransaction)
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -80,15 +126,20 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
             <Label className="!text-[18px] font-normal text-[rgba(0,0,0,0.75)] tracking-[0.9px]">
               Kategori
             </Label>
-            <Select value={kategori} onValueChange={(val) => setKategori(val || "")} required>
+            <Select value={kategoriId} onValueChange={(val) => setKategoriId(val || "")}>
               <SelectTrigger className="!h-[41px] !w-full !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !py-0 !px-3">
-                <SelectValue placeholder="makanan" />
+                <SelectValue placeholder="Pilih kategori" />
               </SelectTrigger>
               <SelectContent className="!rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px]">
-                <SelectItem value="Makanan" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Makanan</SelectItem>
-                <SelectItem value="Transportasi" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Transportasi</SelectItem>
-                <SelectItem value="Kebutuhan Harian" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Kebutuhan Harian</SelectItem>
-                <SelectItem value="Lainnya" className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5">Lainnya</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem
+                    key={cat.id}
+                    value={cat.id}
+                    className="!rounded-[8px] !text-[16px] !tracking-[0.8px] !py-2.5"
+                  >
+                    {cat.displayName}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -111,9 +162,10 @@ export function FormPengeluaran({ onSubmit }: { onSubmit?: (data: any) => void }
         <div className="flex justify-center pt-2">
           <button
             type="submit"
-            className="w-full max-w-[332px] h-[47px] bg-[#07334C] hover:bg-[#07334C]/90 text-white text-[20px] font-semibold tracking-[0.9px] rounded-[32px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] transition-colors"
+            disabled={submitting}
+            className="w-full max-w-[332px] h-[47px] bg-[#07334C] hover:bg-[#07334C]/90 text-white text-[20px] font-semibold tracking-[0.9px] rounded-[32px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.25)] transition-colors disabled:opacity-60"
           >
-            Simpan
+            {submitting ? "Menyimpan..." : "Simpan"}
           </button>
         </div>
       </form>

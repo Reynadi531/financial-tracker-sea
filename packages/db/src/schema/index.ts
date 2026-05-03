@@ -68,6 +68,25 @@ export type Wishlist = typeof wishlists.$inferSelect;
 export type NewWishlist = typeof wishlists.$inferInsert;
 
 // ============================================================================
+// CONTRIBUTIONS (wishlist contribution history)
+// ============================================================================
+
+export const contributions = sqliteTable("contributions", {
+  id: text("id").primaryKey(),
+  wishlistId: text("wishlist_id")
+    .notNull()
+    .references(() => wishlists.id, { onDelete: "cascade" }),
+  amount: real("amount").notNull(),
+  note: text("note"),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+});
+
+export type Contribution = typeof contributions.$inferSelect;
+export type NewContribution = typeof contributions.$inferInsert;
+
+// ============================================================================
 // BUDGETS
 // ============================================================================
 
@@ -101,7 +120,16 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
   }),
 }));
 
-export const wishlistsRelations = relations(wishlists, ({}) => ({}));
+export const wishlistsRelations = relations(wishlists, ({ many }) => ({
+  contributions: many(contributions),
+}));
+
+export const contributionsRelations = relations(contributions, ({ one }) => ({
+  wishlist: one(wishlists, {
+    fields: [contributions.wishlistId],
+    references: [wishlists.id],
+  }),
+}));
 
 export const budgetsRelations = relations(budgets, ({}) => ({}));
 

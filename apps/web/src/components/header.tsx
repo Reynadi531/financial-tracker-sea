@@ -1,6 +1,12 @@
 import { PanelLeft } from "lucide-react";
 
-export default function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
+interface HeaderProps {
+  onToggleSidebar: () => void;
+  title: string;
+  subtitle?: string;
+}
+
+export default function Header({ onToggleSidebar, title, subtitle }: HeaderProps) {
   return (
     <div className="flex items-center justify-between px-6 md:px-8 py-4 border-b border-[#d5d5d5]/50 bg-white shrink-0">
       <div className="flex items-center gap-3">
@@ -8,15 +14,18 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: () => voi
           <PanelLeft className="w-5 h-5 text-foreground/75" />
         </button>
         <h1 className="text-xl md:text-[25px] font-semibold text-[rgba(0,0,0,0.75)] tracking-[0.025em]">
-          Dashboard Utama
+          {title}
         </h1>
 
-        {/* Divider */}
-        <div className="hidden md:block w-px h-[44px] bg-border mx-2" />
-
-        <p className="hidden md:block text-sm text-[rgba(117,117,117,0.46)] font-normal">
-          Lacak kemana uang mu pergi
-        </p>
+        {subtitle && (
+          <>
+            {/* Divider */}
+            <div className="hidden md:block w-px h-[44px] bg-border mx-2" />
+            <p className="hidden md:block text-sm text-[rgba(117,117,117,0.46)] font-normal">
+              {subtitle}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

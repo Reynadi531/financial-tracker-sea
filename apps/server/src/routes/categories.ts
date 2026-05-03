@@ -22,9 +22,22 @@ const updateCategorySchema = z.object({
   colorHex: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
 });
 
-// GET /categories - List all categories
+// GET /categories - List all categories (auto-seeds if empty)
 app.get("/", async (c) => {
-  const all = await db.select().from(categories).orderBy(categories.name);
+  let all = await db.select().from(categories).orderBy(categories.name);
+
+  // Auto-seed default categories if none exist
+  if (all.length === 0) {
+    const seeds: NewCategory[] = defaultCategories.map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      displayName: cat.displayName,
+      colorHex: cat.colorHex,
+    }));
+    await db.insert(categories).values(seeds);
+    all = await db.select().from(categories).orderBy(categories.name);
+  }
+
   return c.json(all);
 });
 
