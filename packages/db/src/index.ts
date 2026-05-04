@@ -2,6 +2,8 @@ import { env } from "@financial-tracker-sea/env/server";
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 import { migrate } from "drizzle-orm/libsql/migrator";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
 import * as schema from "./schema";
 
@@ -19,7 +21,7 @@ export async function runMigrations() {
 
   try {
     await migrate(db, {
-      migrationsFolder: new URL("../src/migrations", import.meta.url).pathname,
+      migrationsFolder: path.join(path.dirname(fileURLToPath(import.meta.url)), "migrations"),
     });
     console.log("Migrations applied successfully.");
   } catch (err: any) {

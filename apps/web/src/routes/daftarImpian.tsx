@@ -40,7 +40,8 @@ const formatRupiah = (value: number) => {
 
 function DaftarImpianLayout() {
   const location = useLocation();
-  const isDetailPage = location.pathname !== "/daftarImpian" && location.pathname.startsWith("/daftarImpian/");
+  const isDetailPage =
+    location.pathname !== "/daftarImpian" && location.pathname.startsWith("/daftarImpian/");
 
   if (isDetailPage) {
     return <Outlet />;
@@ -73,10 +74,7 @@ function DaftarImpian() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [wishlistData, statsData] = await Promise.all([
-        fetchWishlists(),
-        fetchWishlistStats(),
-      ]);
+      const [wishlistData, statsData] = await Promise.all([fetchWishlists(), fetchWishlistStats()]);
       setWishlists(wishlistData);
       setStats(statsData);
     } catch (err) {
@@ -130,9 +128,7 @@ function DaftarImpian() {
   };
 
   const filteredList =
-    activeTab === "Semua"
-      ? wishlists
-      : wishlists.filter((item) => item.status === activeTab);
+    activeTab === "Semua" ? wishlists : wishlists.filter((item) => item.status === activeTab);
 
   return (
     <div className="flex flex-col gap-8 w-full mx-auto pb-10 bg-[#fbfbfb] min-h-screen">
@@ -329,10 +325,7 @@ function DaftarImpian() {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="h-[297px] bg-gray-200 rounded-[15px] animate-pulse"
-                  />
+                  <div key={i} className="h-[297px] bg-gray-200 rounded-[15px] animate-pulse" />
                 ))}
               </div>
             ) : filteredList.length === 0 ? (
@@ -343,8 +336,12 @@ function DaftarImpian() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredList.map((item) => {
+                  const currentEffective = Math.max(
+                    0,
+                    Math.min(item.currentAmount, stats.budgetRemaining),
+                  );
                   const pct = Math.min(
-                    Math.round((item.currentAmount / item.targetAmount) * 100),
+                    Math.round((currentEffective / item.targetAmount) * 100),
                     100,
                   );
                   return (
@@ -354,48 +351,52 @@ function DaftarImpian() {
                       params={{ wishlistId: item.id }}
                       className="block"
                     >
-                    <Card className="overflow-hidden bg-white border-[#d5d5d5] border-[0.5px] shadow-none flex flex-col rounded-[15px] h-[297px] hover:shadow-md hover:border-[#0070b2] transition-all cursor-pointer">
-                      <div className="h-[168px] overflow-hidden relative">
-                        <img
-                          src={
-                            item.imageUrl ||
-                            "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=400&q=80"
-                          }
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,255,255,0.05)] to-[rgba(0,0,0,0.5)] opacity-80" />
-                      </div>
-                      <CardContent className="p-5 flex-1 flex flex-col justify-between">
-                        <h3 className="font-semibold text-[14px] text-black line-clamp-1">
-                          {item.name}
-                        </h3>
+                      <Card className="overflow-hidden bg-white border-[#d5d5d5] border-[0.5px] shadow-none flex flex-col rounded-[15px] h-[297px] hover:shadow-md hover:border-[#0070b2] transition-all cursor-pointer">
+                        <div className="h-[168px] overflow-hidden relative">
+                          <img
+                            src={
+                              item.imageUrl ||
+                              "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=400&q=80"
+                            }
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(255,255,255,0.05)] to-[rgba(0,0,0,0.5)] opacity-80" />
+                        </div>
+                        <CardContent className="p-5 flex-1 flex flex-col justify-between">
+                          <h3 className="font-semibold text-[14px] text-black line-clamp-1">
+                            {item.name}
+                          </h3>
 
-                        <div className="flex justify-between items-end mt-2">
-                          <div className="flex flex-col">
-                            <p className="text-[12px] text-[#757575] font-medium mb-1">Terkumpul</p>
-                            <p className="font-bold text-[#0070b2] text-[12px]">
-                              {formatRupiah(item.currentAmount)}
+                          <div className="flex justify-between items-end mt-2">
+                            <div className="flex flex-col">
+                              <p className="text-[12px] text-[#757575] font-medium mb-1">
+                                Terkumpul
+                              </p>
+                              <p className="font-bold text-[#0070b2] text-[12px]">
+                                {formatRupiah(
+                                  Math.max(0, Math.min(item.currentAmount, stats.budgetRemaining)),
+                                )}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <p className="text-[12px] text-[#757575] font-medium mb-1">Target</p>
+                              <p className="font-bold text-black text-[12px]">
+                                {formatRupiah(item.targetAmount)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1 mt-4">
+                            <div className="[&_[data-slot=progress-indicator]]:bg-[#0070b2] [&_[data-slot=progress-track]]:bg-[#d9d9d9]">
+                              <Progress value={pct} className="h-[9px] rounded-[10px]" />
+                            </div>
+                            <p className="text-[10px] font-medium text-left text-[#757575] mt-1">
+                              {pct}% tercapai
                             </p>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <p className="text-[12px] text-[#757575] font-medium mb-1">Target</p>
-                            <p className="font-bold text-black text-[12px]">
-                              {formatRupiah(item.targetAmount)}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-1 mt-4">
-                          <div className="[&_[data-slot=progress-indicator]]:bg-[#0070b2] [&_[data-slot=progress-track]]:bg-[#d9d9d9]">
-                            <Progress value={pct} className="h-[9px] rounded-[10px]" />
-                          </div>
-                          <p className="text-[10px] font-medium text-left text-[#757575] mt-1">
-                            {pct}% tercapai
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
                     </Link>
                   );
                 })}

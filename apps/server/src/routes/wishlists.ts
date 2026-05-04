@@ -2,7 +2,13 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { eq, desc, sql, and, gte, lte } from "drizzle-orm";
 import { db } from "@financial-tracker-sea/db";
-import { wishlists, budgets, transactions, categories, contributions } from "@financial-tracker-sea/db/schema";
+import {
+  wishlists,
+  budgets,
+  transactions,
+  categories,
+  contributions,
+} from "@financial-tracker-sea/db/schema";
 import { Hono } from "hono";
 
 const app = new Hono();
@@ -58,26 +64,28 @@ app.get("/stats", async (c) => {
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  const [budget] = await db
-    .select()
-    .from(budgets)
-    .where(eq(budgets.month, currentMonth));
+  const [budget] = await db.select().from(budgets).where(eq(budgets.month, currentMonth));
 
-  let budgetRemaining = 0;
-  if (budget) {
-    // budget.totalAmount already reflects remaining balance (after expense deductions)
-    // No need to subtract expenses again — just use totalAmount directly
-    budgetRemaining = budget.totalAmount;
-  }
+  // Fetch contributions this month to avoid double counting in totalCollected
+  const startDate = `${currentMonth}-01`;
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0]!;
+
+  const budgetRemaining = budget?.totalAmount ?? 0;
+
+  const [currentMonthContribs] = await db
+    .select({ total: sql<number>`coalesce(sum(${contributions.amount}), 0)` })
+    .from(contributions)
+    .where(and(gte(contributions.createdAt, startDate), lte(contributions.createdAt, endDate)));
+
+  const currentMonthContribAmount = currentMonthContribs?.total ?? 0;
 
   // totalCollected = total wishlist contributions + budget remaining balance
-  const totalCollected = totalCurrent + budgetRemaining;
+  // Subtract current month contributions from budgetRemaining because they are already in totalCurrent
+  const totalCollected = totalCurrent + (budgetRemaining - currentMonthContribAmount);
 
   // Cap progress at 100% so the pie chart doesn't break
   const overallProgress =
-    totalTarget > 0
-      ? Math.min(Math.round((totalCollected / totalTarget) * 100), 100)
-      : 0;
+    totalTarget > 0 ? Math.min(Math.round((totalCollected / totalTarget) * 100), 100) : 0;
 
   return c.json({
     totalTarget,
@@ -120,10 +128,7 @@ app.get("/:id/contributions", async (c) => {
 app.get("/:id/history", async (c) => {
   const id = c.req.param("id");
 
-  const [wishlist] = await db
-    .select()
-    .from(wishlists)
-    .where(eq(wishlists.id, id));
+  const [wishlist] = await db.select().from(wishlists).where(eq(wishlists.id, id));
 
   if (!wishlist) {
     return c.json({ error: "Wishlist not found" }, 404);
@@ -140,9 +145,7 @@ app.get("/:id/history", async (c) => {
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   const startDate = `${currentMonth}-01`;
-  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-    .toISOString()
-    .split("T")[0]!;
+  const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0]!;
 
   const txRows = await db
     .select({
@@ -235,10 +238,7 @@ app.post("/:id/contribute", async (c) => {
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  const [existingBudget] = await db
-    .select()
-    .from(budgets)
-    .where(eq(budgets.month, currentMonth));
+  const [existingBudget] = await db.select().from(budgets).where(eq(budgets.month, currentMonth));
 
   if (existingBudget) {
     // Update existing budget by adding the contribution amount
@@ -265,10 +265,7 @@ app.post("/:id/contribute", async (c) => {
 app.get("/:id", async (c) => {
   const id = c.req.param("id");
 
-  const [wishlist] = await db
-    .select()
-    .from(wishlists)
-    .where(eq(wishlists.id, id));
+  const [wishlist] = await db.select().from(wishlists).where(eq(wishlists.id, id));
 
   if (!wishlist) {
     return c.json({ error: "Wishlist not found" }, 404);
@@ -307,10 +304,7 @@ app.put("/:id", zValidator("json", updateWishlistSchema), async (c) => {
 app.delete("/:id", async (c) => {
   const id = c.req.param("id");
 
-  const [deleted] = await db
-    .delete(wishlists)
-    .where(eq(wishlists.id, id))
-    .returning();
+  const [deleted] = await db.delete(wishlists).where(eq(wishlists.id, id)).returning();
 
   if (!deleted) {
     return c.json({ error: "Wishlist not found" }, 404);
