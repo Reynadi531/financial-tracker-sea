@@ -32,10 +32,7 @@ async function adjustBudget(delta: number) {
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
-  const [existingBudget] = await db
-    .select()
-    .from(budgets)
-    .where(eq(budgets.month, currentMonth));
+  const [existingBudget] = await db.select().from(budgets).where(eq(budgets.month, currentMonth));
 
   if (existingBudget) {
     await db
@@ -51,7 +48,7 @@ async function adjustBudget(delta: number) {
     await db.insert(budgets).values({
       id: crypto.randomUUID(),
       month: currentMonth,
-      totalAmount: Math.max(delta, 0),
+      totalAmount: delta,
     });
   }
 }
@@ -129,13 +126,8 @@ app.get("/summary", async (c) => {
   let whereClause: any = undefined;
   if (month) {
     const [yearStr, monthStr] = month.split("-");
-    const lastDay = new Date(Number(yearStr), Number(monthStr), 0)
-      .toISOString()
-      .split("T")[0];
-    whereClause = and(
-      gte(transactions.date, `${month}-01`),
-      lte(transactions.date, lastDay!),
-    );
+    const lastDay = new Date(Number(yearStr), Number(monthStr), 0).toISOString().split("T")[0];
+    whereClause = and(gte(transactions.date, `${month}-01`), lte(transactions.date, lastDay!));
   }
 
   const result = await db
@@ -201,10 +193,7 @@ app.post("/", zValidator("json", createTransactionSchema), async (c) => {
   const id = crypto.randomUUID();
 
   // Verify category exists
-  const [cat] = await db
-    .select()
-    .from(categories)
-    .where(eq(categories.id, body.categoryId));
+  const [cat] = await db.select().from(categories).where(eq(categories.id, body.categoryId));
 
   if (!cat) {
     return c.json({ error: "Category not found" }, 400);
@@ -224,10 +213,13 @@ app.post("/", zValidator("json", createTransactionSchema), async (c) => {
   // Subtract expense from current month's budget
   await adjustBudget(-body.amount);
 
-  return c.json({
-    ...created,
-    category: cat,
-  }, 201);
+  return c.json(
+    {
+      ...created,
+      category: cat,
+    },
+    201,
+  );
 });
 
 // PUT /transactions/:id - Update a transaction
@@ -244,10 +236,7 @@ app.put("/:id", zValidator("json", updateTransactionSchema), async (c) => {
   }
 
   // Fetch the old transaction to compute the amount difference
-  const [oldTx] = await db
-    .select()
-    .from(transactions)
-    .where(eq(transactions.id, id));
+  const [oldTx] = await db.select().from(transactions).where(eq(transactions.id, id));
 
   if (!oldTx) {
     return c.json({ error: "Transaction not found" }, 404);
@@ -283,10 +272,7 @@ app.put("/:id", zValidator("json", updateTransactionSchema), async (c) => {
 app.delete("/:id", async (c) => {
   const id = c.req.param("id");
 
-  const [deleted] = await db
-    .delete(transactions)
-    .where(eq(transactions.id, id))
-    .returning();
+  const [deleted] = await db.delete(transactions).where(eq(transactions.id, id)).returning();
 
   if (!deleted) {
     return c.json({ error: "Transaction not found" }, 404);

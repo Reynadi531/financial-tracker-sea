@@ -89,9 +89,7 @@ function WishlistDetail() {
     setContributing(true);
     try {
       await contributeWishlist(wishlistId, value);
-      toast.success(
-        `Berhasil menambahkan tabungan ${formatRupiah(value)} ke impian & budget!`,
-      );
+      toast.success(`Berhasil menambahkan tabungan ${formatRupiah(value)} ke impian & budget!`);
       setAmount("");
       await loadData();
     } catch (err: any) {
@@ -105,9 +103,7 @@ function WishlistDetail() {
     setContributing(true);
     try {
       await contributeWishlist(wishlistId, value);
-      toast.success(
-        `Berhasil menambahkan tabungan ${formatRupiah(value)} ke impian & budget!`,
-      );
+      toast.success(`Berhasil menambahkan tabungan ${formatRupiah(value)} ke impian & budget!`);
       await loadData();
     } catch (err: any) {
       toast.error(err.message || "Gagal menambahkan tabungan");
@@ -128,9 +124,7 @@ function WishlistDetail() {
   if (!wishlist) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="text-xl font-semibold text-[rgba(0,0,0,0.75)] mb-4">
-          Impian tidak ditemukan
-        </p>
+        <p className="text-xl font-semibold text-[rgba(0,0,0,0.75)] mb-4">Impian tidak ditemukan</p>
         <Button
           onClick={() => navigate({ to: "/daftarImpian" })}
           className="bg-[#07334c] hover:bg-[#07334c]/90 text-white rounded-[12px] px-6"
@@ -141,11 +135,13 @@ function WishlistDetail() {
     );
   }
 
-  // Progress: terkumpul is the budget balance (affected by both tabungan and pengeluaran)
-  const terkumpul = budgetAmount || 0;
-  const pct = wishlist.targetAmount > 0
-    ? Math.min(Math.round((terkumpul / wishlist.targetAmount) * 100), 100)
-    : 0;
+  // Progress: terkumpul is the amount saved specifically for this wishlist,
+  // but capped by the total available budget balance
+  const terkumpul = Math.max(0, Math.min(wishlist.currentAmount, budgetAmount));
+  const pct =
+    wishlist.targetAmount > 0
+      ? Math.min(Math.round((terkumpul / wishlist.targetAmount) * 100), 100)
+      : 0;
   const isCompleted = wishlist.status === "Tercapai";
 
   return (
@@ -208,9 +204,7 @@ function WishlistDetail() {
 
           {/* Quick Add Chips */}
           <div className="px-6 py-4 flex items-center gap-3 flex-wrap">
-            <p className="text-[16px] font-normal text-black whitespace-nowrap">
-              tambah cepat :
-            </p>
+            <p className="text-[16px] font-normal text-black whitespace-nowrap">tambah cepat :</p>
             {QUICK_AMOUNTS.map((val) => (
               <button
                 key={val}
@@ -227,11 +221,8 @@ function WishlistDetail() {
           {/* Progress Section — terkumpul based on budget */}
           <div className="px-6 pb-4">
             <p className="text-[16px] font-normal text-black mb-1">
-              terkumpul :{" "}
-              <span className="font-semibold">
-                {formatRupiah(terkumpul)}
-              </span>
-              /{formatRupiah(wishlist.targetAmount)}
+              terkumpul : <span className="font-semibold">{formatRupiah(terkumpul)}</span>/
+              {formatRupiah(wishlist.targetAmount)}
             </p>
             <div className="relative">
               <div className="[&_[data-slot=progress-indicator]]:bg-[#07334c] [&_[data-slot=progress-track]]:bg-[#d9d9d9]">
@@ -272,9 +263,7 @@ function WishlistDetail() {
           </h3>
 
           {history.length === 0 ? (
-            <p className="text-[10px] text-[#404040] text-center">
-              Belum ada riwayat
-            </p>
+            <p className="text-[10px] text-[#404040] text-center">Belum ada riwayat</p>
           ) : (
             <div className="flex flex-col gap-3">
               {history.slice(0, 5).map((entry) => (
@@ -290,18 +279,18 @@ function WishlistDetail() {
                     ) : (
                       <ArrowUp className="w-[14px] h-[14px] text-red-500" />
                     )}
-                    <p className={`text-[10px] font-semibold tracking-[0.5px] ${
-                      entry.type === "contribution" ? "text-green-700" : "text-red-600"
-                    }`}>
+                    <p
+                      className={`text-[10px] font-semibold tracking-[0.5px] ${
+                        entry.type === "contribution" ? "text-green-700" : "text-red-600"
+                      }`}
+                    >
                       {entry.type === "contribution" ? "+" : "-"}
                       {formatRupiah(entry.amount)}
                     </p>
                   </div>
                   {/* Label */}
                   <p className="text-[10px] font-semibold text-[#404040] tracking-[0.5px] text-center mt-1 truncate">
-                    {entry.type === "contribution"
-                      ? `\u201C${entry.label}\u201D`
-                      : entry.label}
+                    {entry.type === "contribution" ? `\u201C${entry.label}\u201D` : entry.label}
                   </p>
                   {/* Divider line */}
                   <div className="border-t border-[#d9d9d9] mt-2" />
