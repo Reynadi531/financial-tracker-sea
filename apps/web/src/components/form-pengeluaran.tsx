@@ -9,6 +9,7 @@ import {
   SelectItem,
 } from "@financial-tracker-sea/ui/components/select";
 import { CalendarDays, LogOut } from "lucide-react";
+import { useRef } from "react";
 import { toast } from "sonner";
 import { fetchCategories, type ApiCategory } from "../lib/api";
 
@@ -36,6 +37,8 @@ export function FormPengeluaran({
       .then(setCategories)
       .catch(() => toast.error("Gagal memuat kategori"));
   }, []);
+
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const resetForm = () => {
     setJumlahRp("");
@@ -111,13 +114,17 @@ export function FormPengeluaran({
             </Label>
             <div className="relative">
               <Input
+                ref={dateInputRef}
                 type="date"
                 value={tanggal}
                 onChange={(e) => setTanggal(e.target.value)}
                 required
-                className="!h-[41px] !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !placeholder:text-[rgba(0,0,0,0.5)] pr-10"
+                className="!h-[41px] !rounded-[13px] !border-[rgba(0,0,0,0.75)] !bg-white !text-[16px] !text-[rgba(0,0,0,0.5)] !tracking-[0.8px] !placeholder:text-[rgba(0,0,0,0.5)]"
               />
-              <CalendarDays className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[rgba(0,0,0,0.5)] pointer-events-none" />
+              <CalendarDays
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[rgba(0,0,0,0.5)] cursor-pointer"
+                onClick={() => dateInputRef.current?.showPicker?.()}
+              />
             </div>
           </div>
 
